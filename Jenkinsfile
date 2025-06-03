@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'Node',
+        nodejs 'Node'
         sonarQubeScanner 'SonarQube Scanner for Jenkins Pipeline' 
     }
     stages {
