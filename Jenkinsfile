@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'Node 18' // Match the name you gave above
+        nodejs 'Node' // Match the name you gave above
     }
     stages {
         stage('Checkout') {
