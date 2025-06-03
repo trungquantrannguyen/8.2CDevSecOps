@@ -29,5 +29,10 @@ pipeline {
                 sh 'npm audit || true'
             }
         }
+        stage('SonarCloud Analysis') {
+            steps {
+                sh 'sonar-scanner -Dsonar.login=${SONAR_TOKEN}'
+            }
+        }
     }
 }
