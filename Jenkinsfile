@@ -1,19 +1,18 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'Node' // Only NodeJS goes here
+    environment {
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
     }
 
-    environment {
-        
-        SONAR_TOKEN = credentials('SONAR_TOKEN') 
+    tools {
+        nodejs 'Node' // Ensure 'Node' matches the NodeJS tool name in Jenkins
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/trungquantrannguyen/8.2CDevSecOps.git'
+                git branch: 'main', url: 'https://github.com/your_github_username/8.2CDevSecOps.git'
             }
         }
 
@@ -29,14 +28,26 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan') {
+        stage('Generate Coverage Report') {
             steps {
-                script {
-                    // 'MySonarQube' should match the name of the SonarQube server defined under:
-                    // Manage Jenkins → Configure System → SonarQube servers
-                    withSonarQubeEnv('MySonarQube') {
-                        sh 'sonar-scanner'
-                    }
+                sh 'npm run coverage || true'
+            }
+        }
+
+        stage('NPM Audit (Security Scan)') {
+            steps {
+                sh 'npm audit || true'
+            }
+        }
+
+        stage('SonarCloud Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+                        unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+                        ./sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner
+                    '''
                 }
             }
         }
