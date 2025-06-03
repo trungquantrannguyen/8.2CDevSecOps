@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-        // Add this only if your SonarQube setup needs authentication
-        // SONAR_TOKEN = credentials('sonar-token-id') 
+        
+        SONAR_TOKEN = credentials('SONAR_TOKEN') 
     }
 
     stages {
